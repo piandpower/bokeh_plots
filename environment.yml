@@ -1,0 +1,5 @@
+name: bokex
+dependencies:
+    - python=2.7
+    - bokeh
+    - flask
