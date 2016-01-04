@@ -5,7 +5,7 @@
         <script src="http://cdn.pydata.org/bokeh/release/bokeh-0.10.0.min.js"></script>
     </head>
     <body>
-        {{ script }}
-        {{ div }}
+        {{ script | safe }}
+        {{ div | safe }}
     </body>
 </html>

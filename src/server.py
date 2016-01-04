@@ -4,8 +4,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    plot = dashboard()
-    return render_template("index.html", div=plot[1], script=plot[0])
+    script, div = dashboard()
+    return render_template("index.html", div=div, script=script)
 
 if __name__ == '__main__':
     app.debug = True
