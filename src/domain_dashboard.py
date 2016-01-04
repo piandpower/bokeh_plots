@@ -1,18 +1,18 @@
+from urlparse import urlparse
+
 from bokeh.sampledata.iris import flowers
 from bokeh.plotting import figure, show, output_file
 from bokeh.embed import components
 
+from data import data
+
+
 def dashboard():
-    colormap = {'setosa': 'red', 'versicolor': 'green', 'virginica': 'blue'}
-    flowers['color'] = flowers['species'].map(lambda x: colormap[x])
+    urls = [x[0][0] for x in data["pages"]]
+    xdata = [x[1] for x in data["pages"]]
+    ydata = [x[2] for x in data["pages"]]
 
-    output_file("iris.html", title="iris.py example")
+    domains = [urlparse(x).hostname for x in urls]
+    endings = [x[x.rfind("."):] for x in domains]
 
-    p = figure(title = "Iris Morphology")
-    p.xaxis.axis_label = 'Petal Length'
-    p.yaxis.axis_label = 'Petal Width'
-
-    p.circle(flowers["petal_length"], flowers["petal_width"],
-            color=flowers["color"], fill_alpha=0.2, size=10, )
-
-    return components(p)
+dashboard()
