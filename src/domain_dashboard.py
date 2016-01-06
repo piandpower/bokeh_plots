@@ -1,3 +1,4 @@
+from math import pi
 from urlparse import urlparse
 from collections import Counter
 
@@ -11,6 +12,7 @@ from data import data as sample
 
 
 PLOT_ELEMENTS = 10
+BAR_WIDTH = 0.4
 
 
 def domains_bar(response):
@@ -20,18 +22,17 @@ def domains_bar(response):
 
     parsed_urls = [urlparse(x).hostname for x in urls]
     domains = Counter(parsed_urls).most_common(PLOT_ELEMENTS)
-    endings = Counter([x[x.rfind("."):] for x in parsed_urls]).most_common(PLOT_ELEMENTS)
 
     xdomains = [x[0] for x in domains]
     ydomains = [y[1] for y in domains]
 
-    xendings = [x[0] for x in endings]
-    yendings = [y[1] for y in endings]
-
     source = ColumnDataSource(data=dict(x=xdomains, y=ydomains))
 
-    p = Bar(source.data, values="y", label="x", title="Domains by Number")
-    return components(p)
+    p = Bar(source.data, values="y", label="x", title="Domains by Number",
+            bar_width=BAR_WIDTH)
+    bar_panel = Panel(child=p, title="Domains")
+
+    return bar_panel
 
 
 def top_level_domains_bar(response):
@@ -45,13 +46,13 @@ def top_level_domains_bar(response):
 
     source = ColumnDataSource(data=dict(x=xendings, y=yendings))
 
-    p = Bar(source.data, values="y", label="x", title="Top Level Domains by Number")
-    return components(p)
+    p = Bar(source.data, values="y", label="x",
+            title="Top Level Domains by Number", bar_width=BAR_WIDTH)
+    bar_panel = Panel(child=p, title="Top Level")
+    return bar_panel
 
 
 def dashboard():
-    # domains = domains_bar(sample)
-    # top_level = top_level_domains_bar(sample)
-    # return components(Tabs(tabs=[domains, top_level]))
-    # return top_level_domains_bar(sample)
-    return domains_bar(sample)
+    domains = domains_bar(sample)
+    top_level = top_level_domains_bar(sample)
+    return components(Tabs(tabs=[domains, top_level]))
