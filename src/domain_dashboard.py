@@ -5,8 +5,9 @@ from collections import Counter
 from bokeh.plotting import figure, show, output_file
 from bokeh.embed import components
 from bokeh.models import ColumnDataSource
-from bokeh.models.widgets import Panel, Tabs
+from bokeh.models.widgets import Panel, Tabs, Button
 from bokeh.charts import Bar
+from bokeh.io import vform
 
 from data import data as sample
 
@@ -15,10 +16,28 @@ PLOT_ELEMENTS = 10
 BAR_WIDTH = 0.4
 
 
+def sample_tabs():
+    from bokeh.models.widgets import Panel, Tabs
+    from bokeh.io import output_file, show
+    from bokeh.plotting import figure
+
+    output_file("slider.html")
+
+    p1 = figure(plot_width=300, plot_height=300)
+    p1.circle([1, 2, 3, 4, 5], [6, 7, 2, 4, 5], size=20, color="navy", alpha=0.5)
+    tab1 = Panel(child=p1, title="circle")
+
+    p2 = figure(plot_width=300, plot_height=300)
+    p2.line([1, 2, 3, 4, 5], [6, 7, 2, 4, 5], line_width=3, color="navy", alpha=0.5)
+    tab2 = Panel(child=p2, title="line")
+
+    tabs = Tabs(tabs=[ tab1, tab2 ])
+
+    return tabs
+
+
 def domains_bar(response):
     urls = [x[0][0] for x in response["pages"]]
-    # xdata = [x[1] for x in response["pages"]]
-    # ydata = [x[2] for x in response["pages"]]
 
     parsed_urls = [urlparse(x).hostname for x in urls]
     domains = Counter(parsed_urls).most_common(PLOT_ELEMENTS)
@@ -53,6 +72,8 @@ def top_level_domains_bar(response):
 
 
 def dashboard():
+    button = Button(label="Foo", type="success")
     domains = domains_bar(sample)
     top_level = top_level_domains_bar(sample)
-    return components(Tabs(tabs=[domains, top_level]))
+    return components(vform(Tabs(tabs=[domains, top_level]), button))
+    #return components(sample())
