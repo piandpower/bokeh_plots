@@ -1,4 +1,3 @@
-from math import pi
 from urlparse import urlparse
 from collections import Counter
 
@@ -9,7 +8,7 @@ from bokeh.models.widgets import Panel, Tabs, Button, DataTable, DateFormatter, 
 from bokeh.charts import Bar
 from bokeh.io import vform
 
-from data import data as sample
+from data import page_data as sample
 
 
 PLOT_ELEMENTS = 10
@@ -45,8 +44,8 @@ def domains_table(response):
     source = ColumnDataSource(data=dict(x=xdomains, y=ydomains))
 
     columns = [
-            TableColumn(field="y", title="Domain"),
-            TableColumn(field="x", title="Count"),
+            TableColumn(field="x", title="Domain"),
+            TableColumn(field="y", title="Count"),
         ]
     data_table = DataTable(source=source, columns=columns, width=400,
             height=280)
@@ -76,8 +75,8 @@ def top_level_domains_table(response):
     yendings = [y[1] for y in endings]
     source = ColumnDataSource(data=dict(x=xendings, y=yendings))
     columns = [
-            TableColumn(field="y", title="Top Level Domain"),
-            TableColumn(field="x", title="Count"),
+            TableColumn(field="x", title="Top Level Domain"),
+            TableColumn(field="y", title="Count"),
         ]
     data_table = DataTable(source=source, columns=columns, width=400,
             height=280)
