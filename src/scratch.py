@@ -1,24 +1,23 @@
 from urlparse import urlparse
-from data import data
 from collections import Counter, OrderedDict
 
 from bokeh.models import ColumnDataSource
 
+from data import time_data
+from datetime import datetime, timedelta
+
+import pandas as pd
+import numpy as np
 
 
+datetimes = np.array([np.datetime64(x[1]) for x in time_data])
+base = datetimes[0]
+deltas = np.array([base - np.datetime64(x[1]) for x in time_data])
 
-urls = [x[0][0] for x in data["pages"]]
-xdata = [x[1] for x in data["pages"]]
-ydata = [x[2] for x in data["pages"]]
+# datetimes = np.array([np.datetime64(x[1]) for x in time_data])
+# parsed_dates = pd.to_timedelta(datetimes)
+# print(parsed_dates)
+# parsed_dates.values.sort()
 
-parsed_urls = [urlparse(x).hostname for x in urls]
-domains = Counter(parsed_urls).most_common()
-endings = Counter([x[x.rfind("."):] for x in parsed_urls]).most_common()
-
-xdomains = [x[0] for x in domains]
-ydomains = [y[1] for y in domains]
-
-xendings = [x[0] for x in endings]
-yendings = [y[1] for y in endings]
-
-source = ColumnDataSource(data=dict(x=xdomains, y=ydomains))
+# df = pd.DataFrame(parsed_dates, columns=["datetimes"])
+# gb = df.groupby("datetimes")

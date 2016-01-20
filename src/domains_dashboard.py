@@ -14,7 +14,11 @@ PLOT_ELEMENTS = 10
 BAR_WIDTH = 0.4
 
 
-def domains_dashboard(response):
+def domains_dashboard(response, extra_plots=None):
+    """
+    Domains dashboard plot function. Takes an arguments for extra plots which
+    will be added in a tab with the other plots.
+    """
     # Parsed Response Data
     urls = [x[0][0] for x in response["pages"]]
     parsed_urls = [urlparse(x).hostname for x in urls]
@@ -25,8 +29,9 @@ def domains_dashboard(response):
     ydomains = [y[1] for y in domains]
 
     source_domains = ColumnDataSource(data=dict(x=xdomains, y=ydomains))
-    bar_domains = Bar(source_domains.data, values="y", label="x", title="Domains by Number",
-            bar_width=BAR_WIDTH)
+    bar_domains = Bar(source_domains.data, values="y", label="x", title="Most Common Domains by Number",
+            bar_width=BAR_WIDTH, height=584, xlabel="Domains",
+            ylabel="Occurences")
     panel_domains = Panel(child=bar_domains, title="Domains")
 
     # Domain Information Table
@@ -44,8 +49,8 @@ def domains_dashboard(response):
 
     source_top_level = ColumnDataSource(data=dict(x=xendings, y=yendings))
     bar_top_level = Bar(source_top_level.data, values="y", label="x",
-            title="Top Level Domains by Number", bar_width=BAR_WIDTH)
-    panel_top_level = Panel(child=bar_top_level, title="Top Level")
+            title="Most Common URL Endings by Number", bar_width=BAR_WIDTH, height=584)
+    panel_top_level = Panel(child=bar_top_level, title="Endings")
 
     # Top level domains table
     columns_top_level = [
@@ -58,6 +63,8 @@ def domains_dashboard(response):
     # Add the plots and charts to a vform and organize them with VBox and HBox
     plot_tabs = Tabs(tabs=[panel_domains, panel_top_level])
 
+    # Take the two tables and the graph, turn them into VBox, then organize them
+    # side by side in an HBox.
     vbox_tables = VBox(children=[data_table_domain, data_table_top_level])
     vbox_plots = VBox(children=[plot_tabs])
     hbox_dashboard = HBox(children=[vbox_tables, vbox_plots])
